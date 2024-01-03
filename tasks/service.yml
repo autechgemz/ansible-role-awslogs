@@ -1,0 +1,13 @@
+---
+
+- name: Service tasks
+  become: true
+  tags:
+    - awslogs_service
+    - awslogs
+  block:
+    - name: Ensure service
+      ansible.builtin.service:
+        name: "{{ awslogs_service_name }}"
+        state: "{{ awslogs_service_ensure }}"
+        enabled: "{{ awslogs_service_enable }}"

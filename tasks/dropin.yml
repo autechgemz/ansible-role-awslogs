@@ -1,0 +1,32 @@
+---
+
+- name: Configration tasks
+  when: awslogs_package_ensure != 'absent'
+  tags:
+    - awslogs_config
+    - awslogs
+  become: true
+  block:
+
+    - name: Merge configration
+      ansible.builtin.set_fact:
+        awslogs_dropin_config_options_merged: "{{ awslogs_dropin_config_options | ansible.builtin.combine(awslogs_dropin_config_options_default, recursive=True) }}"
+
+    - name: Debug variables
+      ansible.builtin.include_tasks: debug/dropin.yml
+      when: awslogs_debug is defined and awslogs_debug
+
+    - name: Manage awslogs dropin configration
+      when: awslogs_dropin_config_options is defined and awslogs_dropin_config_options
+      ansible.builtin.template:
+        src: awslogs.dropin.conf.j2
+        dest: "{{ awslogs_config_dir }}/config/override.conf"
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: Manage awslogs dropin configration
+      when: awslogs_dropin_config_options is undefined or not awslogs_dropin_config_options
+      ansible.builtin.file:
+        path: "{{ awslogs_config_dir }}/config/override.conf"
+        state: absent

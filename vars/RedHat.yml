@@ -1,0 +1,10 @@
+---
+
+awslogs_package_name:
+  - awslogs
+
+awslogs_service_name: 'awslogsd'
+
+awslogs_config_dir: '/etc/awslogs'
+
+awslogs_dropin_config_dir: '/etc/awslogs/config'

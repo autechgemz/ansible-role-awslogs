@@ -1,0 +1,22 @@
+---
+
+- name: Configration tasks - debug
+  tags:
+    - awslogs_config
+    - awslogs
+  block:
+
+    - name: Debug awslogs_cli_config_options_default
+      ansible.builtin.debug:
+        var: awslogs_cli_config_options_default
+      when: awslogs_debug is defined and awslogs_debug
+
+    - name: Debug awslogs_cli_config_options
+      ansible.builtin.debug:
+        var: awslogs_cli_config_options
+      when: awslogs_debug is defined and awslogs_debug
+
+    - name: Debug awslogs_cli_onfig_merged
+      ansible.builtin.debug:
+        var: awslogs_cli_config_options_merged
+      when: awslogs_debug is defined and awslogs_debug

@@ -1,0 +1,60 @@
+---
+
+- name: Configration tasks
+  when: awslogs_package_ensure != 'absent'
+  tags:
+    - awslogs_config
+    - awslogs
+  become: true
+  block:
+
+    - name: Merge awslogs configration
+      ansible.builtin.set_fact:
+        awslogs_config_options_merged: "{{ awslogs_config_options | ansible.builtin.combine(awslogs_config_options_default, recursive=True) }}"
+
+    - name: Debug variables
+      ansible.builtin.include_tasks: debug/config.yml
+      when: awslogs_debug is defined and awslogs_debug
+
+    - name: Manage awslogs configration
+      ansible.builtin.template:
+        src: awslogs.conf.j2
+        dest: "{{ awslogs_config_dir }}/awslogs.conf"
+        owner: root
+        group: root
+        mode: 0644
+      notify: Restart awslogs
+
+    - name: Merge awslogs CLI configration
+      ansible.builtin.set_fact:
+        awslogs_cli_config_options_merged: "{{ awslogs_cli_config_options | ansible.builtin.combine(awslogs_cli_config_options_default, recursive=True) }}"
+
+    - name: Debug variables
+      ansible.builtin.include_tasks: debug/cli.yml
+      when: awslogs_debug is defined and awslogs_debug
+
+    - name: Manage awslogs CLI configration
+      ansible.builtin.template:
+        src: awscli.conf.j2
+        dest: "{{ awslogs_config_dir }}/awscli.conf"
+        owner: root
+        group: root
+        mode: 0600
+      notify: Restart awslogs
+
+    - name: Merge awslogs proxy configration
+      ansible.builtin.set_fact:
+        awslogs_proxy_config_options_merged: "{{ awslogs_proxy_config_options | ansible.builtin.combine(awslogs_proxy_config_options_default, recursive=True) }}"
+
+    - name: Debug variables
+      ansible.builtin.include_tasks: debug/proxy.yml
+      when: awslogs_debug is defined and awslogs_debug
+
+    - name: Manage awslogs proxy configration
+      ansible.builtin.template:
+        src: proxy.conf.j2
+        dest: "{{ awslogs_config_dir }}/proxy.conf"
+        owner: root
+        group: root
+        mode: 0644
+      notify: Restart awslogs

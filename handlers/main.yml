@@ -1,0 +1,12 @@
+---
+- name: Restart awslogs
+  ansible.builtin.systemd:
+    name: "{{ awslogs_service_name }}"
+    state: restarted
+  become: true
+
+- name: Reload awslogs
+  ansible.builtin.systemd:
+    name: "{{ awslogs_service_name }}"
+    state: reloaded
+  become: true

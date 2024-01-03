@@ -1,0 +1,41 @@
+---
+
+awslogs_debug: false
+
+awslogs_package_ensure: present
+
+awslogs_service_ensure: 'started'
+
+awslogs_service_enable: true
+
+awslogs_config_options: {}
+
+awslogs_config_options_default:
+  general:
+    state_file: '/var/lib/awslogs/agent-state'
+  /var/log/messages:
+    datetime_format: '%b %d %H:%M:%S'
+    file: '/var/log/messages'
+    buffer_duration: '5000'
+    log_stream_name: '{instance_id}'
+    initial_position: 'start_of_file'
+    log_group_name: '/var/log/messages'
+
+awslogs_cli_config_options: {}
+
+awslogs_cli_config_options_default:
+  plugins:
+    cwlogs: cwlogs
+  default:
+    region: us-east-1
+
+awslogs_proxy_config_options: {}
+
+awslogs_proxy_config_options_default:
+  HTTP_PROXY: ""
+  HTTPS_PROXY: ""
+  NO_PROXY: ""
+
+awslogs_dropin_config_options: {}
+
+awslogs_dropin_config_options_default: {}

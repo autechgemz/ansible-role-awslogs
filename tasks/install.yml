@@ -1,0 +1,14 @@
+---
+
+- name: Installation tasks
+  when: ansible_os_family == 'Debian'
+  tags:
+    - awslogs_install
+    - awslogs
+  become: true
+  block:
+  - name: Install packages
+    ansible.builtin.apt:
+      name: "{{ awslogs_package_name }}"
+      update_cache: true
+      state: "{{ awslogs_package_ensure }}"
